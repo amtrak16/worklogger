@@ -7,7 +7,15 @@ class App extends Component {
     super(props);
 
     this.state = 
-      {projects: [],
+      {
+        projWork: [{
+          projVal: 'Work',
+          descVal: '',
+          minsVal: ''}],
+        projPers: [{
+          projVal: 'Personal',
+          descVal: '',
+          minsVal: ''}],
         projVal: '',
         descVal: '',
         minsVal: '',
@@ -26,7 +34,6 @@ class App extends Component {
     this.onDescIn = this.onDescIn.bind(this)
     this.onMinsIn = this.onMinsIn.bind(this)
     this.onAddClick = this.onAddClick.bind(this)
-    this.renderWorkItem = this.renderWorkItem.bind(this)
 
     }
 
@@ -61,17 +68,17 @@ class App extends Component {
       descVal: this.state.descVal,
       minsVal: this.state.minsVal
     }
-    let arr = this.state.projects
-    arr.push(newWorkLogItem)
-    this.setState({ projects: arr, projVal: '', descVal: '', minsVal: '' })
-
-    this.renderWorkItem (newWorkLogItem);
+    if (this.state.projVal == "Work"){
+      let arr = this.state.projWork
+      arr.push(newWorkLogItem)
+      this.setState({ projWork: arr, projVal: '', descVal: '', minsVal: '' })
+    } else {
+      let arr = this.state.projPers
+      arr.push(newWorkLogItem)
+      this.setState({ projPers: arr, projVal: '', descVal: '', minsVal: '' })
+    }
   }
   
-  renderWorkItem (newWorkLogItem) {
-    
-  }
-
   render() {
     return (
       <div className="App">
@@ -81,35 +88,53 @@ class App extends Component {
         <div class="card">
           <form onSubmit={this.onAddClick}>
             <div class="row">
-              <div class="large-4 columns md-text-field with-floating-label">
+              <div class="small-4 columns md-text-field with-floating-label">
                 <select class="os-default" value={this.state.projVal} onChange={this.onProjIn}>
                   <option value="" disabled selected id="project_in" required >Select an Option</option>
                   <option value="Personal">Personal</option>
                   <option value="Work">Work</option>
-                  <option value="Hobby">Hobby</option>
                 </select>
                 <span class="select-arrow"></span>
                 <span class="error">{this.state.projMsg}</span>
               </div>
             </div>
             <div class="row">
-              <div class="large-4 columns md-text-field with-floating-label">
+              <div class="small-4 columns md-text-field with-floating-label">
                 <input type="text" id="desc_in" value={this.state.descVal} required onChange={this.onDescIn}/>
                 <label for="desc_in">Description</label>
                 <span class="error">{this.state.descMsg}</span>
               </div>
             </div>
             <div class="row">
-              <div class="large-4 columns md-text-field with-floating-label">
+              <div class="small-4 columns md-text-field with-floating-label">
                 <input type="number" id="mins_in" max="480" min="15" value={this.state.minsVal} step="15"required onChange={this.onMinsIn}/>
                 <label for="mins_in">Minutes in multiple of 15</label>
                 <span class="error">{this.state.minMsg}</span>
               </div>
             </div>
             <div class="row padding-small">
-              <button class="button btn-cta" >Add</button>
+              <button class="button btn-cta" >Add Item</button>
             </div>
           </form> 
+        </div>
+        <RenderWorkItems workItemList={this.state.projects}/>
+      </div>
+    );
+  }
+}
+
+class RenderWorkItems extends Component {
+  render() {
+    return (
+      <div class="card">
+        <div class="row">
+          <div class="small-1 columns"></div>
+          <div class="small-3 columns">Personal</div>
+          <div class="small-1 columns">Duration</div>
+          <div class="small-2 columns"></div>
+          <div class="small-3 columns">Work</div>
+          <div class="small-1 columns">Duration</div>
+          <div class="small-1 columns"></div>
         </div>
       </div>
     );

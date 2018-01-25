@@ -9,12 +9,12 @@ class App extends Component {
     this.state = 
       {projects: [],
         projVal: '',
+        descVal: '',
+        minsVal: '',
         projErr: false,
         projMsg: '',
-        descVal: '',
         descErr: false,
         descMsg: '',
-        minsVal: 0,
         minsErr: false,
         minsMsg: '',
       } 
@@ -26,6 +26,7 @@ class App extends Component {
     this.onDescIn = this.onDescIn.bind(this)
     this.onMinsIn = this.onMinsIn.bind(this)
     this.onAddClick = this.onAddClick.bind(this)
+    this.renderWorkItem = this.renderWorkItem.bind(this)
 
     }
 
@@ -56,12 +57,19 @@ class App extends Component {
   onAddClick (evt) {
     evt.preventDefault()
     const newWorkLogItem = {
-      project: this.state.projVal,
-      description: this.state.descVal,
-      minutes: this.state.minsVal
+      projVal: this.state.projVal,
+      descVal: this.state.descVal,
+      minsVal: this.state.minsVal
     }
-    let arr = [newWorkLogItem]
-    this.setState({projects: arr})
+    let arr = this.state.projects
+    arr.push(newWorkLogItem)
+    this.setState({ projects: arr, projVal: '', descVal: '', minsVal: '' })
+
+    this.renderWorkItem (newWorkLogItem);
+  }
+  
+  renderWorkItem (newWorkLogItem) {
+    
   }
 
   render() {
@@ -74,22 +82,27 @@ class App extends Component {
           <form onSubmit={this.onAddClick}>
             <div class="row">
               <div class="large-4 columns md-text-field with-floating-label">
-                <input type="text" id="project_in" required onChange={this.onProjIn}/>
-                <label for="project_in">Project</label>
+                <select class="os-default" value={this.state.projVal} onChange={this.onProjIn}>
+                  <option value="" disabled selected id="project_in" required >Select an Option</option>
+                  <option value="Personal">Personal</option>
+                  <option value="Work">Work</option>
+                  <option value="Hobby">Hobby</option>
+                </select>
+                <span class="select-arrow"></span>
                 <span class="error">{this.state.projMsg}</span>
               </div>
             </div>
             <div class="row">
               <div class="large-4 columns md-text-field with-floating-label">
-                <input type="text" id="desc_in" required onChange={this.onDescIn}/>
+                <input type="text" id="desc_in" value={this.state.descVal} required onChange={this.onDescIn}/>
                 <label for="desc_in">Description</label>
                 <span class="error">{this.state.descMsg}</span>
               </div>
             </div>
             <div class="row">
               <div class="large-4 columns md-text-field with-floating-label">
-                <input type="text" id="mins_in" required onChange={this.onMinsIn}/>
-                <label for="mins_in">Minutes</label>
+                <input type="number" id="mins_in" max="480" min="15" value={this.state.minsVal} step="15"required onChange={this.onMinsIn}/>
+                <label for="mins_in">Minutes in multiple of 15</label>
                 <span class="error">{this.state.minMsg}</span>
               </div>
             </div>

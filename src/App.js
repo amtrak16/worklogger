@@ -8,14 +8,8 @@ class App extends Component {
 
     this.state = 
       {
-        projWork: [{
-          projVal: 'Work',
-          descVal: '',
-          minsVal: ''}],
-        projPers: [{
-          projVal: 'Personal',
-          descVal: '',
-          minsVal: ''}],
+        projWork: [],
+        projPers: [],
         projVal: '',
         descVal: '',
         minsVal: '',
@@ -68,7 +62,7 @@ class App extends Component {
       descVal: this.state.descVal,
       minsVal: this.state.minsVal
     }
-    if (this.state.projVal == "Work"){
+    if (this.state.projVal === "Work"){
       let arr = this.state.projWork
       arr.push(newWorkLogItem)
       this.setState({ projWork: arr, projVal: '', descVal: '', minsVal: '' })
@@ -83,7 +77,7 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <h1 className="App-title">{this.props.title}</h1>
+          <h1 className="App-title" >{this.props.title}</h1>
         </header>
         <div class="card">
           <form onSubmit={this.onAddClick}>
@@ -117,7 +111,11 @@ class App extends Component {
             </div>
           </form> 
         </div>
-        <RenderWorkItems workItemList={this.state.projects}/>
+        <div class="card">
+          <div class="row">
+            <RenderWorkItems workItemList={this.state.projWork} persItemList={this.state.projPers}/>
+          </div>
+        </div>
       </div>
     );
   }
@@ -125,18 +123,62 @@ class App extends Component {
 
 class RenderWorkItems extends Component {
   render() {
-    return (
-      <div class="card">
-        <div class="row">
-          <div class="small-1 columns"></div>
-          <div class="small-3 columns">Personal</div>
-          <div class="small-1 columns">Duration</div>
-          <div class="small-2 columns"></div>
-          <div class="small-3 columns">Work</div>
-          <div class="small-1 columns">Duration</div>
-          <div class="small-1 columns"></div>
-        </div>
-      </div>
+
+    let lrgstAry = 0;
+    let workLrgst = false;
+    let persLrgst = false;
+    if (this.props.workItemList.length > this.props.persItemList.length) {
+      lrgstAry = this.props.workItemList.length
+      workLrgst = true
+    }
+    else {
+      lrgstAry = this.props.persItemList.length
+      persLrgst = true
+    }
+
+    console.log(lrgstAry)
+
+    let workItemRows = [];
+    for (let i=0; i<lrgstAry; i++) {
+      if (persLrgst) {
+        if (this.props.workItemList[i].descVal !='') {
+        workItemRows.push(
+          <tr>
+            <td>{this.props.workItemList[i].descVal}</td>
+            <td>{this.props.workItemList[i].minsVal}</td>
+            <td>{this.props.persItemList[i].descVal}</td>
+            <td>{this.props.persItemList[i].minsVal}</td>
+          </tr>)
+        }
+      }
+    }  
+    // // this.props.workItemList.forEach((workItem, idx) => {
+    // //   workItemRow.push(
+    //   {/* </tr>
+    //   )
+    // }); */}
+
+    // {/* let persItemRow = [];
+    // this.props.persItemList.forEach((persItem, idx) => {
+    //   persItemRow.push(
+    //     <tr> */}
+    // //   )
+    // // });
+
+return (
+        // <div class="row">
+        <table class="table" role="grid">
+          <thead>
+            <tr>
+              <th width="200">Work Description</th>
+              <th width="150">Minutes</th>
+              <th width="200">Personal Description</th>
+              <th width="150">Minutes</th>
+            </tr>
+          </thead>
+          <tbody>{workItemRows}</tbody>
+        </table>
+        // </div>
     );
   }
 }
